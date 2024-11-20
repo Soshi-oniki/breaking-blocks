@@ -146,6 +146,13 @@ function keyUpHandler(e)
     }
 }
 
+function touchMoveHandler(e) {
+  const touchX = e.touches[0].clientX;
+  const canvasRect = canvas.getBoundingClientRect();
+  paddleX = touchX - canvasRect.left - paddleWidth / 2;
+  paddleX = Math.max(0, Math.min(canvas.width - paddleWidth, paddleX));
+}
+
 function collisionDetection() {
   for (let c = 0; c < brickColumnCount; c++) {
     for (let r = 0; r < brickRowCount; r++) {
@@ -181,4 +188,18 @@ function drawScore()
 
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
+canvas.addEventListener("touchmove", touchMoveHandler, false);
+
+// リサイズ対応（オプション）
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  paddleX = (canvas.width - paddleWidth) / 2;
+  x = canvas.width / 2;
+  y = canvas.height - 30;
+}
+
+window.addEventListener("resize", resizeCanvas, false);
+resizeCanvas(); // 初期ロード時s
+
 const interval = setInterval(draw, 10);
